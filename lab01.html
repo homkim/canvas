@@ -2,25 +2,126 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>canvas basic</title>
-    <script src="lab01.js"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>canvas basic</title>
+
 </head>
 
-<body onload="draw();">
-    <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
-        canvas를 지원하지 않으면 이 글이 보입니다.
-    </canvas>
-    <script>
-        var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
+<body>
+	<canvas id="cv1" width="200" height="100" style="border: 1px solid #000000;"></canvas>
+	<canvas id="cv2" width="200" height="100" style="border: 1px solid #000000;"></canvas>
+	<canvas id="cv3" width="200" height="100" style="border: 1px solid #000000;"></canvas>
+	<canvas id="cv4" width="200" height="100" style="border: 1px solid #000000;"></canvas>
+	<canvas id="cv5" width="200" height="100" style="border: 1px solid #000000;"></canvas>
+	<canvas id="cv6" width="200" height="100" style="border: 1px solid #000000;"></canvas>
+	<canvas id="cv7" width="200" height="100" style="border: 1px solid #000000;"></canvas>
+	<script>
+		var c2 = document.getElementById("cv2").getContext("2d");
+		c2.moveTo(0, 0);
+		c2.lineTo(200, 100);
+		c2.stroke();
 
-        ctx.moveTo(0, 0);
-        ctx.lineTo(200, 100);
-        ctx.
-        ctx.stroke();
-    </script>
+		var c3 = document.getElementById("cv3").getContext("2d");
+		c3.beginPath();
+		c3.strokeStyle = "blue";
+		c3.arc(95, 50, 40, 0, Math.PI * 1.5);
+		c3.lineTo(95,50);
+		c3.lineTo(135,50)
+		c3.stroke();
+
+		var c4 = document.getElementById("cv4").getContext("2d");
+		c4.font = "30px Arial";
+		c4.fillText("Hello World", 10, 50);
+
+		var c5 = document.getElementById("cv5").getContext("2d");
+		c5.font = "30px Arial";
+		c5.strokeText("Hello World", 10, 50);
+
+		var c6 = document.getElementById("cv6").getContext("2d");
+		c6.fillStyle = "#FF0000";
+		c6.fillRect(0, 0, 150, 75);
+
+		var cv7 = document.getElementById("cv7");
+		var cx7 = cv7.getContext("2d");
+		var radius = cv7.height / 2;
+		cx7.translate(radius, radius);
+		radius = radius * 0.90
+		setInterval(drawClock, 1000);
+
+		function drawClock() {
+			drawFace(cx7, radius);
+			drawNumbers(cx7, radius);
+			drawTime(cx7, radius);
+		}
+
+		function drawFace(cx7, radius) {
+			var grad;
+			cx7.beginPath();
+			cx7.arc(0, 0, radius, 0, 2 * Math.PI);
+			cx7.fillStyle = 'white';
+			cx7.fill();
+			grad = cx7.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 1.05);
+			grad.addColorStop(0, '#333');
+			grad.addColorStop(0.5, 'white');
+			grad.addColorStop(1, '#333');
+			cx7.strokeStyle = grad;
+			cx7.lineWidth = radius * 0.1;
+			cx7.stroke();
+			cx7.beginPath();
+			cx7.arc(0, 0, radius * 0.1, 0, 2 * Math.PI);
+			cx7.fillStyle = '#333';
+			cx7.fill();
+		}
+
+		function drawNumbers(cx7, radius) {
+			var ang;
+			var num;
+			cx7.font = radius * 0.15 + "px arial";
+			cx7.textBaseline = "middle";
+			cx7.textAlign = "center";
+			for (num = 1; num < 13; num++) {
+				ang = num * Math.PI / 6;
+				cx7.rotate(ang);
+				cx7.translate(0, -radius * 0.85);
+				cx7.rotate(-ang);
+				cx7.fillText(num.toString(), 0, 0);
+				cx7.rotate(ang);
+				cx7.translate(0, radius * 0.85);
+				cx7.rotate(-ang);
+			}
+		}
+
+		function drawTime(cx7, radius) {
+			var now = new Date();
+			var hour = now.getHours();
+			var minute = now.getMinutes();
+			var second = now.getSeconds();
+			//hour
+			hour = hour % 12;
+			hour = (hour * Math.PI / 6) +
+				(minute * Math.PI / (6 * 60)) +
+				(second * Math.PI / (360 * 60));
+			drawHand(cx7, hour, radius * 0.5, radius * 0.07);
+			//minute
+			minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
+			drawHand(cx7, minute, radius * 0.8, radius * 0.07);
+			// second
+			second = (second * Math.PI / 30);
+			drawHand(cx7, second, radius * 0.9, radius * 0.02);
+		}
+
+		function drawHand(cx7, pos, length, width) {
+			cx7.beginPath();
+			cx7.lineWidth = width;
+			cx7.lineCap = "round";
+			cx7.moveTo(0, 0);
+			cx7.rotate(pos);
+			cx7.lineTo(0, -length);
+			cx7.stroke();
+			cx7.rotate(-pos);
+		}
+	</script>
 </body>
 
 </html>
